@@ -13,7 +13,7 @@ class Option:
     def initVola(self):
         self.vola=0.2
 
-    def calcPrice(self, S: float, timeToExp: float, vola: float, rate:float):
+    def calcPrice(self, S: float, timeToExp: float, vola: float, rate=0):
         if not np.isnan(vola):
             IV = vola
         else:
