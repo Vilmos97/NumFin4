@@ -35,7 +35,7 @@ class Option:
             print("expired!")
             return np.nan
 
-    def payoff(self, spot:float)->float:
+    def calcPayoff(self, spot:float)->float:
         if self.right == "C":
             return max(spot-self.strike,0)*self.pos
         elif self.right=="P":
