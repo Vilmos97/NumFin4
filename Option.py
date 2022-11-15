@@ -63,11 +63,13 @@ class Option:
             print("Wrong option type")
             return np.nan
 
-    def calcVola(self, time, price, rate=0):    #calcs implied volaility from market price
+    def calcVola(self, S, time, price, rate=0):
+        # calcs implied vola from market price
         vola_hi = 0.4
-        while self.CalcPrice(S, vola_hi, time, rate) < price:
+        vola_low = 0
+        while self.calcPrice(S, time, vola_hi, rate) < price:
+            vola_low = vola_hi
             vola_hi *= 2
-        vola_low = vola_hi / 2
         while abs(vola_hi - vola_low) > 0.0001:
             vola = 0.5 * (vola_low + vola_hi)
             price_updated = self.calcPrice(S, time, vola, rate)
