@@ -115,4 +115,6 @@ eff_frontier_df=pd.DataFrame(eff_frontier).transpose()
 eff_frontier_df["Standard deviation"]=eff_frontier_df.apply(lambda x: calc_nasset_std(np.array(x), cov_asset), axis=1)
 eff_frontier_df.reset_index(inplace=True)
 eff_frontier_df.plot(x="Standard deviation", y="index")
+
+
 pass
