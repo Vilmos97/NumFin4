@@ -94,10 +94,25 @@ nsasset_mean_std_df.plot.scatter(x="Portfolio Std. Dev.", y="Portfolio Return")
 plt.show()
 
 # 4.feladat optimalizáció
-return_target = 0.2
-cons = ({'type' : 'eq', 'fun': lambda weight: return_target - calc_nasset_mean(weight,mean_asset)}, {'type' : 'eq', 'fun': lambda weight: np.sum(weight)-1})
-res = sp.optimize.minimize(calc_nasset_std, np.array([1,0,0,0,0]), args=(cov_asset), constraints=cons)
+eff_frontier={}
+for return_target in np.linspace(0.01, 0.3,100):
+    #return_target = 0.2
+    cons = ({'type' : 'eq', 'fun': lambda weight: return_target - calc_nasset_mean(weight,mean_asset)},
+        {'type' : 'eq', 'fun': lambda weight: np.sum(weight)-1},
+        {'type' : 'ineq', 'fun': lambda weight: np.max(weight)-0.8})
+    bounds=[]
+#No short position - all the weights are positive
+    for i in range (mean_asset.shape[0]):
+        bounds.append((0, None))
+
+
+    res = sp.optimize.minimize(calc_nasset_std, np.array([1,0,0,0,0]), args=(cov_asset), constraints=cons, bounds=bounds)
 
 eredmeny = res.x
-
+if res.success:
+    eff_frontier[return_target]=res.x
+eff_frontier_df=pd.DataFrame(eff_frontier).transpose()
+eff_frontier_df["Standard deviation"]=eff_frontier_df.apply(lambda x: calc_nasset_std(np.array(x), cov_asset), axis=1)
+eff_frontier_df.reset_index(inplace=True)
+eff_frontier_df.plot(x="Standard deviation")
 pass
