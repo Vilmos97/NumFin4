@@ -66,14 +66,14 @@ for w1 in w1s:
 twoassetptf_df = pd.DataFrame(twoassetptf_dict).transpose()
 twoassetptf_df.columns = ["Portfolio Return", "Portfolio Std. Dev."]
 twoassetptf_df.plot(x="Portfolio Std. Dev.", y="Portfolio Return")
-plt.show()
+#plt.show()
 
 # plt.scatter(ret_asset["BLK"], ret_asset["KO"])
 # plt.suptitle("BKL és KO hozamok")
 # plt.show()
 
 sns.pairplot(ret_asset_ext,hue="Pre-2015")
-plt.show()
+#plt.show()
 
 #3.feladat
 
@@ -91,7 +91,7 @@ for i in range(grid.shape[0]):
 nsasset_mean_std_df = pd.DataFrame(nsasset_mean_std)
 nsasset_mean_std_df.columns = ["Portfolio Return", "Portfolio Std. Dev."]
 nsasset_mean_std_df.plot.scatter(x="Portfolio Std. Dev.", y="Portfolio Return")
-plt.show()
+#plt.show()
 
 # 4.feladat optimalizáció
 eff_frontier={}
@@ -108,11 +108,11 @@ for return_target in np.linspace(0.01, 0.3,100):
 
     res = sp.optimize.minimize(calc_nasset_std, np.array([1,0,0,0,0]), args=(cov_asset), constraints=cons, bounds=bounds)
 
-eredmeny = res.x
-if res.success:
-    eff_frontier[return_target]=res.x
+    eredmeny = res.x
+    if res.success:
+        eff_frontier[return_target]=res.x
 eff_frontier_df=pd.DataFrame(eff_frontier).transpose()
 eff_frontier_df["Standard deviation"]=eff_frontier_df.apply(lambda x: calc_nasset_std(np.array(x), cov_asset), axis=1)
 eff_frontier_df.reset_index(inplace=True)
-eff_frontier_df.plot(x="Standard deviation")
+eff_frontier_df.plot(x="Standard deviation", y="index")
 pass
