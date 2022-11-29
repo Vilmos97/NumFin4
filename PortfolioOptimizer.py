@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import scipy as sp
+import matplotlib.pyplot as plt
 
 class PortfolioOptimizer:
     def __init__(self, asset_price_file_loc, rf=0.01):  # amikor elkészül az objektum, milyen lépések hajtódjanak végre
@@ -9,6 +10,7 @@ class PortfolioOptimizer:
         self._read_asset_file()  # '/content/drive/My Drive/numpu4/Price_history.csv'
         self._calc_asset_metrics()
         self._rf=rf
+        self._asset_names=self._price_hist_df.columns
 
     #  def add_constraints(self,long_only=false):
 
@@ -86,3 +88,13 @@ class PortfolioOptimizer:
             equation_3=params[0]+params[1]*params[2]-cs(params[2])
             return[equation_1, equation_2, equation_3]
         CAL_params=sp.optimize.fsolve(func=system_of_equations(), x0=[self._rf, 0.2,0.2])
+    def plot_eff_frontier_with_cal(self):
+        eff_frontiert=self.calc_eff_frontier()
+        cal_params=self.cal_CAL()
+        eff_frontiert["CAL"]=cal_params[0]+eff_frontiert["Standard dev."]*cal_params[1]
+        eff_frontiert.plot(x="Standard dev.", y=["CAL", "index"])
+        plt.show()
+    def plot_magic_carpet(self):
+        eff_frontiert=self.calc_eff_frontier()
+        eff_frontiert.plot(kind="bar",stacked=True, x="index", y=self._asset_names)
+        plt.show()
